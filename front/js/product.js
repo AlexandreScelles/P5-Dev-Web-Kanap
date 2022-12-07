@@ -32,22 +32,35 @@ fetch(`http://localhost:3000/api/products/${id}`)
 			colorElement.appendChild(option);
 
 
-			itemImg.appendChild(img);
 
-			addToCart.addEventListener("click", function (e) {
-				currentProduct = product;
-				const color = document.querySelector("#colors").value
-				const qty = document.querySelector("#quantity").value
-				if (color == "" || qty == "") {
-					alert("Please select color and quantity")
+		});
+		itemImg.appendChild(img);
+
+		addToCart.addEventListener("click", function (e) {
+
+			const color = document.querySelector("#colors").value;
+			const qty = document.querySelector("#quantity").value;
+			const imgUrl = img.getAttribute("src", product.imageUrl);
+			const imgAlt = img.getAttribute("alt", product.altTxt);
+			if (color == "" || qty == "") {
+				alert("Please select color and quantity");
+			}
+			const cartProduct = {
+				name: product.name,
+				desc: product.description,
+				id: id,
+				color: color,
+				quantity: Number(qty),
+				imageUrl: imgUrl,
+				altText: imgAlt,
+			}
+			console.log(localStorage);
+			const storageProducts = JSON.parse(localStorage.getItem('product'))
+				if (Array.isArray(storageProducts)) {
+					storageProducts.push(cartProduct)
+					localStorage.setItem('product', JSON.stringify(storageProducts));
+				}else {
+					localStorage.setItem('product', JSON.stringify([cartProduct]))
 				}
-				const cartProduct = {
-					id: id,
-					color: color,
-					quantity: Number(qty),
-				}
-				localStorage.setItem(id, JSON.stringify(cartProduct));
-				console.log(localStorage);
-			});
 		});
 	});
