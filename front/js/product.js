@@ -58,7 +58,9 @@ fetch(`http://localhost:3000/api/products/${id}`)
 			const storageProducts = JSON.parse(localStorage.getItem('product'))
 				if (Array.isArray(storageProducts)) {
 					storageProducts.push(cartProduct)
+					console.log(cartProduct)
 					localStorage.setItem('product', JSON.stringify(storageProducts));
+					console.log(storageProducts)
 				}else {
 					localStorage.setItem('product', JSON.stringify([cartProduct]))
 				}
