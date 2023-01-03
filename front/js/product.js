@@ -44,7 +44,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
 		addToCart.addEventListener("click", function (e) {
 
 			const color = document.querySelector("#colors").value;
-			const qty = document.querySelector("#quantity").value;
+			const qty = Number(document.querySelector("#quantity").value);
 			const imgUrl = img.getAttribute("src", product.imageUrl);
 			const imgAlt = img.getAttribute("alt", product.altTxt);
 			// Validation du champ de la quantité et de la couleur
@@ -75,18 +75,29 @@ fetch(`http://localhost:3000/api/products/${id}`)
 					imageUrl: imgUrl,
 					altText: imgAlt,
 				}
-				// Création et/ou Ajout d'objet dans le LocalStorage
-				function addOtherProduct() {
+				/**
+				Création et/ou Ajout d'objet dans le LocalStorage
+				 * @param {Array{}} product
+				 */
+				function addProduct() {
 					const storageProducts = JSON.parse(localStorage.getItem('product'))
 					if (Array.isArray(storageProducts)) {
-						storageProducts.push(cartProduct)
+						const findProduct = storageProducts.find(product =>
+							product.id === id &&
+							product.color === color);
+						if (!findProduct) {
+							storageProducts.push(cartProduct)
+						} else if (findProduct.quantity + qty > 100) {
+							alert ('the maximum quantity is 100/item')
+						} else {
+							findProduct.quantity += qty;
+						}
 						localStorage.setItem('product', JSON.stringify(storageProducts));
 					} else {
 						localStorage.setItem('product', JSON.stringify([cartProduct]))
 					}
-
 				}
-				addOtherProduct()
+				addProduct()
 			}
 		})
 	})
